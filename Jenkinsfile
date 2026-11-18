@@ -53,7 +53,7 @@ pipeline {
                 sh '''
                     docker volume create zap-wrk || true
                     docker rm -f securedev-zap || true
-                    docker run --name securedev-zap --network securedev-net -v zap-wrk:/zap/wrk ghcr.io/zaproxy/zaproxy:stable zap-baseline.py -t http://securedev-app:5000 -r zap_report.html || true
+                    docker run --user root --name securedev-zap --network securedev-net -v zap-wrk:/zap/wrk ghcr.io/zaproxy/zaproxy:stable zap-baseline.py -t http://securedev-app:5000 -r zap_report.html || true
                     docker cp securedev-zap:/zap/wrk/zap_report.html ./zap_report.html || true
                     docker rm -f securedev-zap || true
                 '''
