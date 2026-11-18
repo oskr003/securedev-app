@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+bandit-report.json
+bandit-report.txt
+pip-audit-report.json
+zap_report.html
+zap_report.json
+docs/
+.DS_Store
