@@ -1,5 +1,5 @@
 """@file test_app.py
-@brief Pruebas unitarias básicas para la aplicación Flask SecureDev.
+@brief Pruebas unitarias y de seguridad para la aplicación Flask SecureDev.
 """
 
 import sys
@@ -32,3 +32,21 @@ def test_hello_endpoint():
     res = client.get("/hello?name=Oscar")
     assert res.status_code == 200
     assert b"Oscar" in res.data
+
+
+def test_hello_xss_escaped():
+    """Verifica que /hello escape payloads XSS."""
+    client = app.test_client()
+    res = client.get("/hello?name=<script>alert(1)</script>")
+    assert res.status_code == 200
+    assert b"<script>" not in res.data
+    assert b"&lt;script&gt;" in res.data
+
+
+def test_security_headers():
+    """Verifica la presencia de cabeceras de seguridad HTTP."""
+    client = app.test_client()
+    res = client.get("/")
+    assert res.headers.get("X-Frame-Options") == "DENY"
+    assert res.headers.get("X-Content-Type-Options") == "nosniff"
+    assert "default-src 'self'" in res.headers.get("Content-Security-Policy", "")
